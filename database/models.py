@@ -1,10 +1,13 @@
 from sqlalchemy import Column, String, Integer, BigInteger, Date, ForeignKey
-from bot.database.db import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+
+Base = declarative_base()
 
 
 class Role(Base):
 
-    __tablename__ = 'Roles'
+    __tablename__ = 'roles'
 
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     name = Column(String(50), unique=True)  # Не VARCHAR для того, чтобы можно было спокойно менять СУБД
@@ -12,11 +15,11 @@ class Role(Base):
 
 class User(Base):
 
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
 
     id = Column(BigInteger, autoincrement=True, primary_key=True, unique=True)
     fio = Column(String)
     datar = Column(Date)
 
-    id_role = Column(Integer, ForeignKey('Roles.id'))
+    id_role = Column(Integer, ForeignKey('roles.id'))
 
