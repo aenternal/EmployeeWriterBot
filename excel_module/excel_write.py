@@ -1,29 +1,24 @@
 import xlsxwriter
 
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('Expenses01.xlsx')
-worksheet = workbook.add_worksheet()
 
-# Some data we want to write to the worksheet.
-expenses = (
-    ['Rent', 1000],
-    ['Gas',   100],
-    ['Food',  300],
-    ['Gym',    50],
-)
+def export(session):
+    # Create an new Excel file and add a worksheet.
+    workbook = xlsxwriter.Workbook('employees.xlsx')
+    worksheet = workbook.add_worksheet('employees')
 
-# Start from the first cell. Rows and columns are zero indexed.
-row = 0
-col = 0
+    # Create style for cells
+    header_cell_format = workbook.add_format({'bold': True, 'border': True})
 
-# Iterate over the data and write it out row by row.
-for item, cost in (expenses):
-    worksheet.write(row, col,     item)
-    worksheet.write(row, col + 1, cost)
-    row += 1
+    row_index = 0
+    row_names = ['ФИО', 'Дата рождения', 'Наименование роли']
+    worksheet.write_row('A1', row_names, header_cell_format)
+    row_index += 1
 
-# Write a total using a formula.
-worksheet.write(row, 0, 'Total')
-worksheet.write(row, 1, '=SUM(B1:B4)')
+    rows = session.execute('SELECT users.fio, users.datar, roles.name as id_role FROM users INNER JOIN roles'
+                           ' ON users.id_role = roles.id ORDER BY users.ROWID DESC LIMIT 5')
 
-workbook.close()
+    for i, row in enumerate(rows.fetchall(), start=row_index):
+        for j, value in enumerate(row):
+            worksheet.write(i, j, value)
+
+    workbook.close()

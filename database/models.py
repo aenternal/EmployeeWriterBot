@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, BigInteger, Date, ForeignKey
+from sqlalchemy import Column, String, Integer, Date, ForeignKey, BIGINT
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -17,9 +17,8 @@ class User(Base):
 
     __tablename__ = 'users'
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True, unique=True)
+    id = Column(BIGINT, autoincrement=True, primary_key=True, unique=True, nullable=False)
     fio = Column(String)
     datar = Column(Date)
 
     id_role = Column(Integer, ForeignKey('roles.id'))
-
