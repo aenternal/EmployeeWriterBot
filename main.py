@@ -55,6 +55,7 @@ def employee_proceed(message):
     session.add(employee)
     session.commit()
     export(session)
+    session.close()
     bot.send_document(message.chat.id, document=open('employees.xlsx', 'rb'))
     bot.set_state(message.from_user.id, BotStates.menu)
     main_menu(message)
